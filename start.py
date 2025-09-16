@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from vector_database_management import load_document, split_document, load_vector_store, create_vector_store
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import os
 import config
 
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     print(f"Loaded document with length {len(document[0].page_content)}")
     split_up_document = split_document(document)
     print(f"Split up document into {len(split_up_document)} seperate documents")
-    embeddings_model = GoogleGenerativeAIEmbeddings(model=config.EMBEDDINGS_MODEL)
+    embeddings_model = HuggingFaceEmbeddings(model_name=config.EMBEDDINGS_MODEL, model_kwargs={'device': 'cpu'})
     vector_store = create_vector_store(
             split_up_document, 
             embeddings_model,
