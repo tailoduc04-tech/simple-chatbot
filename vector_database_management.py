@@ -1,7 +1,6 @@
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
-import time
 
 def load_document(markdown_path):
     return UnstructuredMarkdownLoader(markdown_path).load()
@@ -16,10 +15,10 @@ def split_document(document):
 def create_vector_store(split_up_doc, embeddings_model, collection_name, db_path):
     print("Creating vector store")
     return Chroma.from_documents(
-        split_up_doc,
-        embeddings_model,
-        collection_name,
-        db_path
+        documents=split_up_doc,
+        embedding=embeddings_model,
+        collection_name=collection_name,
+        persist_directory=db_path
     )
 
 def load_vector_store(embeddings_model, collection_name, db_path):
