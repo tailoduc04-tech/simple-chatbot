@@ -7,9 +7,8 @@ load_dotenv(dotenv_path)
 
 client = genai.Client()
 
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents="Explain how AI works in a few words",
-)
+result = client.models.embed_content(
+        model="gemini-embedding-001",
+        contents="What is the meaning of life?")
 
-print(response.text)
+print(result.embeddings)
