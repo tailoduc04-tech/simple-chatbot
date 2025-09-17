@@ -19,7 +19,7 @@ if __name__ == "__main__":
         os.makedirs(config.VECTOR_DB_PATH)
 
         # Load document từ file markdown
-        document = load_document(config.D)
+        document = load_document(config.DOCUMENT_PATH)
 
         # Chia nhỏ document
         split_up_doc = split_document(document)
@@ -47,17 +47,31 @@ if __name__ == "__main__":
     rag_chain = RAGChain(llm=llm, retriever=retriever)
     app = rag_chain.build_graph()
     
-    # Chạy ứng dụng
-    question = "How can I use n8n to automate tasks?"
-    print(f"Câu hỏi: {question}")
-    
-    inputs = {"question": question}
-    for output in app.stream(inputs, {"recursion_limit": 5}):
-        for key, value in output.items():
-            print(f"Kết quả từ nút: {key} là: {value}")
-
-    final_state = value
-    print("--------------------------------------------------")
-    print(f"Câu trả lời cuối cùng: {final_state.get('answer', 'Không có câu trả lời được tạo ra.')}")
-    print("--------------------------------------------------")
+    # Vòng lặp trò chuyện CLI với conversation history
+    print("Bắt đầu trò chuyện với chatbot. Gõ 'Exit' để kết thúc.")
+    conversation = []  # Lưu lịch sử hội thoại
+    while True:
+        question = input("Bạn: ")
+        if question.strip().lower() == "exit":
+            print("Kết thúc trò chuyện.")
+            break
+        if not question.strip():
+            continue
+        # Thêm câu hỏi của user vào lịch sử
+        conversation.append({"role": "user", "content": question})
+        # Truyền cả lịch sử hội thoại vào inputs
+        inputs = {"question": question, "conversation": conversation}
+        final_state = None
+        for output in app.stream(inputs, {"recursion_limit": 5}):
+            for key, value in output.items():
+                final_state = value
+        print("--------------------------------------------------")
+        if final_state:
+            answer = final_state.get('answer', 'Không có câu trả lời được tạo ra.')
+            print(f"Chatbot: {answer}")
+            # Thêm câu trả lời của bot vào lịch sử
+            conversation.append({"role": "assistant", "content": answer})
+        else:
+            print("Chatbot: Không có câu trả lời được tạo ra.")
+        print("--------------------------------------------------")
     
