@@ -38,4 +38,6 @@ if __name__ == "__main__":
 
      # Kiểm tra vector_store đã được khởi tạo chưa
      assert vector_store is not None, "Vector store should be initialized"
+     
+     
         
