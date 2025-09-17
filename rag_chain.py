@@ -19,7 +19,7 @@ class RAGChain:
     
     def retrieve(self, state):
         
-        print("Retrieving information")
+        # print("Retrieving information")
         question = state["question"]
         
         if self.retriever is None:
@@ -30,7 +30,7 @@ class RAGChain:
     
     def generate(self, state):
         assert self.llm is not None, "LLM is not set"
-        print("Generating answer")
+        # print("Generating answer")
         
         question = state["question"]
         documents = state["documents"]

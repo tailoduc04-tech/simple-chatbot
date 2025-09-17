@@ -9,3 +9,6 @@ langchain-chroma
 "unstructured[md]"
 nltk
 sentence-transformers
+fastapi
+uvicorn
+python-telegram-bot
